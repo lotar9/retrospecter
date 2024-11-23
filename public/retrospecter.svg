@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+  <!-- Background circle representing continuous improvement -->
+  <circle cx="30" cy="30" r="25" fill="none" stroke="#4A90E2" stroke-width="3" 
+    transform="rotate(-120 30 30)">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="rotate"
+      from="-120 30 30"
+      to="240 30 30"
+      dur="10s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Arrow representing looking back/reflection -->
+  <path d="M30 30 L45 20 L45 40 Z" fill="#4A90E2" transform="rotate(-120 30 30)">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="rotate"
+      from="-120 30 30"
+      to="240 30 30"
+      dur="10s"
+      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Text part -->
+  <text x="70" y="38" font-family="Arial" font-weight="bold" font-size="24" fill="#2C3E50">
+    retrospect
+  </text>
+</svg>
