@@ -1,38 +1,22 @@
 
-// This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
-import { MongoClient, ServerApiVersion } from "mongodb"
- 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
-}
- 
-const uri = process.env.MONGODB_URI
-const options = {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-}
- 
-let client: MongoClient
- 
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClient?: MongoClient
+import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
+
+const config: DynamoDBClientConfig = {
+    credentials: {
+      accessKeyId: process.env.AUTH_DYNAMODB_ID || 'accessKeyId',
+      secretAccessKey: process.env.AUTH_DYNAMODB_SECRET || 'secretAccessKey',
+    },
+    region: process.env.AUTH_DYNAMODB_REGION || 'eu-west-1',
+    endpoint: process.env.AUTH_DYNAMODB_ENDPOINT,
   }
- 
-  if (!globalWithMongo._mongoClient) {
-    globalWithMongo._mongoClient = new MongoClient(uri, options)
-  }
-  client = globalWithMongo._mongoClient
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options)
-}
- 
-// Export a module-scoped MongoClient. By doing this in a
-// separate module, the client can be shared across functions.
-export default client
+   
+  const client = DynamoDBDocument.from(new DynamoDB(config), {
+    marshallOptions: {
+      convertEmptyValues: true,
+      removeUndefinedValues: true,
+      convertClassInstanceToMap: true,
+    },
+  })
+
+  export default client;

@@ -1,0 +1,90 @@
+const [columns, setColumns] = useState<Record<string, ColumnType>>({
+    'went-well': {
+      id: 'went-well',
+      title: 'What went well',
+      subtitle: 'Share positive outcomes',
+      icon: <HandThumbUpIcon className="h-5 w-5" />,
+      color: 'color-success',
+      cards: [
+        { 
+          id: '1', 
+          content: 'Great teamwork on the project!',
+          reporter: {
+            name: 'John Doe',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John'
+          },
+          commentCount: 3,
+          voteCount: 5
+        },
+        { 
+          id: '2', 
+          content: 'Delivered all features on time',
+          reporter: {
+            name: 'Jane Smith',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jane'
+          },
+          commentCount: 1,
+          voteCount: 2
+        }
+      ]
+    },
+    'stop-doing': {
+      id: 'stop-doing',
+      title: 'Stop doing',
+      subtitle: "What should we change?",
+      icon: <XCircleIcon className="h-5 w-5" />,
+      color: 'color-danger',
+      cards: [
+        { 
+          id: '3', 
+          content: 'Last minute changes to requirements',
+          reporter: {
+            name: 'Mike Johnson',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike'
+          },
+          commentCount: 4,
+          voteCount: -2
+        },
+        { 
+          id: '4', 
+          content: 'Working in silos without communication',
+          reporter: {
+            name: 'Sarah Wilson',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah'
+          },
+          commentCount: 2,
+          voteCount: 1
+        }
+      ]
+    },
+    'continue-doing': {
+      id: 'continue-doing',
+      title: 'Continue doing',
+      subtitle: 'What\'s working well?',
+      icon: <ArrowPathIcon className="h-5 w-5" />,
+      color: 'color-info',
+      cards: [
+        { 
+          id: '5', 
+          content: 'Daily standup meetings',
+          reporter: {
+            name: 'Alex Brown',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex'
+          },
+          commentCount: 0,
+          voteCount: 3
+        },
+        { 
+          id: '6', 
+          content: 'Code review process',
+          reporter: {
+            name: 'Emma Davis',
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma'
+          },
+          commentCount: 1,
+          voteCount: 4
+        }
+      ]
+    }
+    // ... define other columns similarly
+  })
