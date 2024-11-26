@@ -23,7 +23,7 @@ export function CardHeader({ reporter }: CardHeaderProps) {
           <AvatarImage src={reporter.avatar} alt={reporter.name} />
           <AvatarFallback>{reporter.name.slice(0, 2)}</AvatarFallback>
         </Avatar>
-        <span className="text-sm font-medium">{reporter.name}</span>
+        <h4 className="font-medium text-gray-900 dark:text-gray-100">{reporter.name}</h4>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

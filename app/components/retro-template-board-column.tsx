@@ -73,13 +73,6 @@ export function RetroTemplateBoardColumn({
             <span className="text-gray-600 dark:text-gray-400">{icon}</span>
             <h3 className="font-medium text-gray-900 dark:text-gray-100">{title}</h3>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-          >
-            <PlusCircleIcon className="h-4 w-4" />
-          </Button>
         </div>
 
         {subtitle && (

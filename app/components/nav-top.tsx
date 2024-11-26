@@ -13,7 +13,16 @@ import {
 } from "@heroicons/react/24/outline";
 import SecondaryNavTop from "@/app/components/secondary-nav-top";
 
-export function NavTop() {
+interface NavTopProps {
+  teams: string[];
+  selectedTeam: string;
+  onTeamChange: (team: string) => void;
+  sprints: string[];
+  selectedSprint: string;
+  onSprintChange: (sprint: string) => void;
+}
+
+export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSprint, onSprintChange }: NavTopProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -80,7 +89,29 @@ export function NavTop() {
       <div className="h-px bg-gray-200 dark:bg-gray-700" />
 
       {/* Bottom Row */}
-      <SecondaryNavTop />
+      <div className="flex items-center justify-between px-4 bg-gray-50 dark:bg-gray-800">
+        <SecondaryNavTop />
+        <div className="flex items-center space-x-2">
+          <select
+            value={selectedTeam}
+            onChange={(e) => onTeamChange(e.target.value)}
+            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+          >
+            {teams.map(team => (
+              <option key={team} value={team}>{team}</option>
+            ))}
+          </select>
+          <select
+            value={selectedSprint}
+            onChange={(e) => onSprintChange(e.target.value)}
+            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+          >
+            {sprints.map(sprint => (
+              <option key={sprint} value={sprint}>{sprint}</option>
+            ))}
+          </select>
+        </div>
+      </div>
     </div>
   );
 }

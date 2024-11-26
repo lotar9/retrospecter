@@ -38,7 +38,7 @@ export function CardFooter({ commentCount, voteCount, onVote }: CardFooterProps)
         >
           <ChevronDownIcon className="h-4 w-4" />
         </Button>
-        <span className="min-w-[1.5rem] text-center">{voteCount}</span>
+        <span className="min-w-[1.5rem] text-sm text-center">{voteCount}</span>
         <Button 
           variant="ghost" 
           size="sm" 

@@ -74,7 +74,7 @@ aws dynamodb create-table \
     --endpoint-url http://localhost:8000
 
 echo "Waiting for table to become active..."
-aws dynamodb wait table-exists --table-name RetroApp --region $AWS_REGION
+aws dynamodb wait table-exists --table-name RetroApp --region $AWS_REGION --endpoint-url http://localhost:8000
 
 # Verify table creation
 echo "Verifying table creation..."
@@ -86,62 +86,6 @@ aws dynamodb describe-table \
 
 echo "Table creation complete!"
 
-# Optional: Add some sample data for testing
-echo "Would you like to insert sample data? (y/n)"
-read response
 
-if [ "$response" = "y" ]; then
-    echo "Inserting sample data..."
-    
-    # Sample Team
-    aws dynamodb put-item \
-        --table-name RetroApp \
-        --item '{
-            "PK": {"S": "TEAM#1"},
-            "SK": {"S": "METADATA#1"},
-            "type": {"S": "TEAM"},
-            "name": {"S": "Development Team"},
-            "description": {"S": "Main development team"},
-            "createdAt": {"S": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"}
-        }' \
-        --region $AWS_REGION
-        --endpoint-url http://localhost:8000
-
-
-    # Sample Column
-    aws dynamodb put-item \
-        --table-name RetroApp \
-        --item '{
-            "PK": {"S": "TEAM#1"},
-            "SK": {"S": "COLUMN#1"},
-            "type": {"S": "COLUMN"},
-            "name": {"S": "What went well"},
-            "order": {"N": "1"},
-            "createdAt": {"S": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"}
-        }' \
-        --region $AWS_REGION
-        --endpoint-url http://localhost:8000
-
-
-    # Sample Sprint
-    aws dynamodb put-item \
-        --table-name RetroApp \
-        --item '{
-            "PK": {"S": "TEAM#1"},
-            "SK": {"S": "SPRINT#1"},
-            "type": {"S": "SPRINT"},
-            "sprintNumber": {"N": "1"},
-            "startDate": {"S": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"},
-            "endDate": {"S": "'$(date -u -d "+2 weeks" +"%Y-%m-%dT%H:%M:%SZ")'"},
-            "status": {"S": "active"},
-            "GSI2PK": {"S": "TEAM#1"},
-            "GSI2SK": {"S": "STATUS#active"}
-        }' \
-        --region $AWS_REGION \
-        --endpoint-url http://localhost:8000
-
-
-    echo "Sample data inserted successfully!"
-fi
 
 echo "Setup complete!"
