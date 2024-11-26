@@ -5,6 +5,7 @@ import { DynamoDBAdapter } from "@auth/dynamodb-adapter"
 import client from "@/app/lib/db"
 
 
+
  
 export const { handlers: {GET, POST}, auth, signIn, signOut } = NextAuth(
     {

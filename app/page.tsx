@@ -41,8 +41,8 @@ interface Survey {
   totalVotes: number
 }
 
-export default function Home() {
 
+export default function Home() {
 
   const [teams, setTeams] = useState<string[]>(['CRM', 'DMS']);
   const [selectedTeam, setSelectedTeam] = useState<string>('CRM');

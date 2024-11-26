@@ -7,6 +7,7 @@ export const authConfig = {
 //      signIn: '/login',
       signOut: '/',
     },
+
     callbacks: {
       authorized({ auth}) {
         return !!auth
