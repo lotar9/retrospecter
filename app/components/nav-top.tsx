@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   UserCircleIcon,
   SunIcon,
@@ -12,6 +13,7 @@ import {
   ArrowRightEndOnRectangleIcon
 } from "@heroicons/react/24/outline";
 import SecondaryNavTop from "@/app/components/secondary-nav-top";
+import { Avatar, AvatarImage, AvatarFallback } from "@/app/components/ui/avatar";
 
 interface NavTopProps {
   teams: string[];
@@ -25,6 +27,7 @@ interface NavTopProps {
 export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSprint, onSprintChange }: NavTopProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     setMounted(true);
@@ -51,7 +54,16 @@ export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSpr
             className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             aria-label="Profile"
           >
-            <UserCircleIcon className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+            {session?.user?.image ? (
+              <Avatar className="w-6 h-6">
+                <AvatarImage src={session.user.image} alt={session.user.name || "User avatar"} />
+                <AvatarFallback>
+                  <UserCircleIcon className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <UserCircleIcon className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+            )}
           </button>
 
           <button
