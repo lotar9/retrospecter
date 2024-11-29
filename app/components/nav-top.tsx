@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 import {
   UserCircleIcon,
   SunIcon,
@@ -14,6 +15,12 @@ import {
 } from "@heroicons/react/24/outline";
 import SecondaryNavTop from "@/app/components/secondary-nav-top";
 import { Avatar, AvatarImage, AvatarFallback } from "@/app/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu";
 
 interface NavTopProps {
   teams: string[];
@@ -28,6 +35,7 @@ export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSpr
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -80,12 +88,21 @@ export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSpr
             )}
           </button>
 
-          <button
-            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Settings"
-          >
-            <Cog6ToothIcon className="w-6 h-6 text-gray-600 dark:text-gray-300" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                aria-label="Settings"
+              >
+                <Cog6ToothIcon className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="right">
+              <DropdownMenuItem onClick={() => router.push('/teams')}>
+                Teams
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <button
             className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
