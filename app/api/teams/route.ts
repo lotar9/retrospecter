@@ -14,10 +14,11 @@ export async function GET() {
       TableName: "RetroApp",
       KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
       ExpressionAttributeValues: {
-        ":pk": `USER#${session.user.id}`,
+        ":pk": `USER#${session.user.email}`,
         ":sk": "TEAM#"
       }
     });
+    console.log(result);
 
     return NextResponse.json(result.Items);
   } catch (error) {

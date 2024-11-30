@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 import { NavTop } from "@/app/components/nav-top";
 import { RetroTemplateBoardColumn } from "@/app/components/retro-template-board-column";
 import { HandThumbUpIcon, XCircleIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
@@ -44,10 +44,31 @@ interface Survey {
 
 export default function Home() {
 
-  const [teams, setTeams] = useState<string[]>(['CRM', 'DMS']);
-  const [selectedTeam, setSelectedTeam] = useState<string>('CRM');
-  const [sprints, setSprints] = useState<string[]>(['Sprint 7', 'Sprint 8']);
-  const [selectedSprint, setSelectedSprint] = useState<string>('Sprint 7');
+  const [teams, setTeams] = useState<string[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<string>('');
+
+  useEffect(() => {
+    async function fetchTeams() {
+      try {
+        const response = await fetch('/api/teams');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Teams:', data.Items);
+          setTeams(data.Items.map((team: { name: string }) => team.name));
+          setSelectedTeam(data[0]?.name || '');
+        } else {
+          console.error('Failed to fetch teams');
+        }
+      } catch (error) {
+        console.error('Error fetching teams:', error);
+      }
+    }
+
+    fetchTeams();
+  }, []);
+  const [sprints, setSprints] = useState<string[]>([]);
+  const [selectedSprint, setSelectedSprint] = useState<string>('');
+
   const [columns, setColumns] = useState<Record<string, ColumnType>>({
     'went-well': {
       id: 'went-well',

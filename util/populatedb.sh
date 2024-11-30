@@ -1,13 +1,13 @@
 echo "Inserting sample data..."
     
-AWS_REGION="us-east-1"  # Change this to your preferred region
+AWS_REGION="eu-west-1"  # Change this to your preferred region
 
     # Sample Team
     aws dynamodb put-item \
         --table-name RetroApp \
         --item '{
-            "PK": {"S": "TEAM#1"},
-            "SK": {"S": "METADATA#1"},
+            "PK": {"S": "USER#sergio.canales@gmail.com"},
+            "SK": {"S": "TEAM#1"},
             "type": {"S": "TEAM"},
             "name": {"S": "SWAT Team 1"},
             "description": {"S": "Team 1 for SWAT"},
@@ -19,8 +19,8 @@ AWS_REGION="us-east-1"  # Change this to your preferred region
     aws dynamodb put-item \
         --table-name RetroApp \
         --item '{
-            "PK": {"S": "TEAM#2"},
-            "SK": {"S": "METADATA#2"},
+            "PK": {"S": "USER#sergio.canales@gmail.com"},
+            "SK": {"S": "TEAM#2"},
             "type": {"S": "TEAM"},
             "name": {"S": "ASA Team"},
             "description": {"S": "Aftersales Assistant Team"},
