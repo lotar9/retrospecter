@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, ReactNode } from 'react'
-import { NavTop } from "@/app/components/nav-top";
 import { RetroTemplateBoardColumn } from "@/app/components/retro-template-board-column";
 import { HandThumbUpIcon, XCircleIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Card } from "@/app/components/card";
@@ -44,10 +43,7 @@ interface Survey {
 
 export default function Home() {
 
-  const [teams, setTeams] = useState<string[]>(['CRM', 'DMS']);
-  const [selectedTeam, setSelectedTeam] = useState<string>('CRM');
-  const [sprints, setSprints] = useState<string[]>(['Sprint 7', 'Sprint 8']);
-  const [selectedSprint, setSelectedSprint] = useState<string>('Sprint 7');
+
   const [columns, setColumns] = useState<Record<string, ColumnType>>({
     'went-well': {
       id: 'went-well',
@@ -200,16 +196,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
-      <NavTop 
-        teams={teams} 
-        selectedTeam={selectedTeam} 
-        onTeamChange={setSelectedTeam} 
-        sprints={sprints} 
-        selectedSprint={selectedSprint} 
-        onSprintChange={setSelectedSprint} 
-      />
-      <div className="flex flex-1 gap-4 p-4">
+    <>
         <div className="flex gap-4 flex-[3]">
           {Object.values(columns).map(column => (
             <RetroTemplateBoardColumn
@@ -244,8 +231,7 @@ export default function Home() {
             onSurveyActions={handleSurveyActions}
           />
         </div>
-      </div>
-    </div>
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import { Button } from './ui/button'
 import { ChatBubbleLeftIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 

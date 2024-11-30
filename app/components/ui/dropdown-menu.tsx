@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useRef, useEffect } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/app/lib/utils"
 import React from "react"
 
 const DropdownMenuContext = createContext<{
@@ -115,7 +115,7 @@ export function DropdownMenuContent({
   children: React.ReactNode
   className?: string
   sideOffset?: number
-  align?: 'left' | 'right'
+  align?: 'left' | 'right' | 'end'
 }) {
   const { isOpen, setIsOpen } = useContext(DropdownMenuContext)
   const ref = useRef<HTMLDivElement>(null)
@@ -139,7 +139,11 @@ export function DropdownMenuContent({
       className={cn(
         "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 bg-white p-1 shadow-md",
         "dark:border-gray-700 dark:bg-gray-800",
-        align === 'right' ? 'right-0' : 'left-0',
+        {
+          'right-0': align === 'right',
+          'left-0': align === 'left',
+          'left-1/2 -translate-x-1/2': align === 'end'
+        },
         'top-full mt-1',
         className
       )}
