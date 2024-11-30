@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useRef, useEffect } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/app/lib/utils"
 import React from "react"
 
 const DropdownMenuContext = createContext<{

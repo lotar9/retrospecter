@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import { CardHeader } from '@/app/components/card-header'
 import { CardContent } from '@/app/components/card-content'
 import { CardFooter } from '@/app/components/card-footer'

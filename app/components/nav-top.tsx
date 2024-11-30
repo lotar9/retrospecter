@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
@@ -23,15 +24,13 @@ import {
 } from "@/app/components/ui/dropdown-menu";
 
 interface NavTopProps {
-  teams: string[];
   selectedTeam: string;
   onTeamChange: (team: string) => void;
-  sprints: string[];
   selectedSprint: string;
   onSprintChange: (sprint: string) => void;
 }
 
-export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSprint, onSprintChange }: NavTopProps) {
+export function NavTop({ selectedTeam, onTeamChange, selectedSprint, onSprintChange }: NavTopProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { data: session } = useSession();
@@ -47,13 +46,15 @@ export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSpr
       <div className="h-[52px] flex items-center justify-between px-4 bg-gray-50 dark:bg-gray-800">
         {/* Logo */}
         <div className="flex items-center">
+          <Link href="/">
           <Image
             src="/retrospecter.svg"
             alt="Retrospecter Logo"
             width={140}
             height={40}
             className="dark:invert"
-          />
+            />
+          </Link>
         </div>
 
         {/* Right side buttons */}
@@ -119,27 +120,12 @@ export function NavTop({ teams, selectedTeam, onTeamChange, sprints, selectedSpr
 
       {/* Bottom Row */}
       <div className="flex items-center justify-between px-4 bg-gray-50 dark:bg-gray-800">
-        <SecondaryNavTop />
-        <div className="flex items-center space-x-2">
-          <select
-            value={selectedTeam}
-            onChange={(e) => onTeamChange(e.target.value)}
-            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-          >
-            {teams.map(team => (
-              <option key={team} value={team}>{team}</option>
-            ))}
-          </select>
-          <select
-            value={selectedSprint}
-            onChange={(e) => onSprintChange(e.target.value)}
-            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-          >
-            {sprints.map(sprint => (
-              <option key={sprint} value={sprint}>{sprint}</option>
-            ))}
-          </select>
-        </div>
+        <SecondaryNavTop 
+          selectedTeam={selectedTeam} 
+          onTeamChange={onTeamChange} 
+          selectedSprint={selectedSprint} 
+          onSprintChange={onSprintChange} 
+        />
       </div>
     </div>
   );

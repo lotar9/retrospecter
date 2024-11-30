@@ -4,7 +4,7 @@ import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { ReactNode, useState } from 'react'
 import { Button } from '@/app/components/ui/button'
 import { ScrollArea } from '@/app/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import { RetroTemplateBoardColumnFooter } from './retro-template-board-column-footer'
 import { RetroTemplateBoardAddCard } from './retro-template-board-add-card'
 
