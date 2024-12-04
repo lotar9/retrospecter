@@ -1,13 +1,15 @@
 "use client"
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { usePathname } from 'next/navigation';
-import { Team } from '@/app/@types/teams';
-import { Sprint } from '@/app/@types/sprints';
+import { Team } from '@/app/types/teams';
+import { Sprint } from '@/app/types/sprints';
+import { fetchTeams, fetchSprints } from '@/app/lib/data';
+
 interface SecondaryNavTopProps {
-  selectedTeam: string;
-  onTeamChange: (team: string) => void;
-  selectedSprint: string;
-  onSprintChange: (sprint: string) => void;
+  selectedTeam: Team | undefined;
+  onTeamChange: (team: Team | undefined) => void;
+  selectedSprint: Sprint | undefined;
+  onSprintChange: (sprint: Sprint | undefined) => void;
 }
 
 export default function SecondaryNavTop({ 
@@ -16,14 +18,35 @@ export default function SecondaryNavTop({
   selectedSprint, 
   onSprintChange 
 }: SecondaryNavTopProps) {
-  const [teams, setTeams] = useState<Team[]>([
-    { id: 'CRM', name: 'CRM', description: 'CRM', externalBoardId: 1, members: [] },
-    { id: 'DMS  ', name: 'DMS' , description: 'DMS', externalBoardId: 2, members: [] }
-  ]);
-  const [sprints, setSprints] = useState<Sprint[]>([
-    { id: 'Sprint 7', name: 'Sprint 7' , teamId: 1, externalId: 1, startDate: '', endDate: '', completedDate: '', status: '', goal: ''},
-    { id: 'Sprint 8', name: 'Sprint 8' , teamId: 2, externalId: 2, startDate: '', endDate: '', completedDate: '', status: '', goal: ''}
-  ]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [sprints, setSprints] = useState<Sprint[]>([]);
+  useEffect(() => {
+    const loadTeams = async () => {
+      const teamsData = await fetchTeams();
+      setTeams(teamsData);
+      if (teamsData.length > 0 && !selectedTeam) {
+        onTeamChange(teamsData[0]);
+      }
+    };
+    loadTeams();
+  }, []);
+  useEffect(() => {
+    const loadSprints = async () => {
+      if (selectedTeam) {
+        try {
+          const team = teams.find(t => t.id === selectedTeam?.id);
+          if (team) {
+            await fetchSprints(team.id);
+          }
+        } catch (error) {
+          console.error('Error fetching sprints:', error);
+        }
+      }
+    };
+
+    loadSprints();
+  }, [selectedTeam]);
+
   const pathname = usePathname();
 
   // Don't render anything if we're on the teams route
@@ -37,8 +60,8 @@ export default function SecondaryNavTop({
         <div className="h-12 flex items-center justify-end space-x-4">
           {/* Team Select */}
           <select
-            value={selectedTeam}
-            onChange={(e) => onTeamChange(e.target.value)}
+            value={selectedTeam?.id }
+            onChange={(e) => onTeamChange(teams.find(team => team.id === e.target.value))}
             className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
           >
             {teams.map(team => (
@@ -48,8 +71,8 @@ export default function SecondaryNavTop({
 
           {/* Sprint Select */}
           <select
-            value={selectedSprint}
-            onChange={(e) => onSprintChange(e.target.value)}
+            value={selectedSprint?.id}
+            onChange={(e) => onSprintChange(sprints.find(sprint => sprint.id === e.target.value))}
             className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
           >
             {sprints.map(sprint => (

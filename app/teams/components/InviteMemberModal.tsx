@@ -1,4 +1,4 @@
-import { InviteMemberModalProps } from "@/app/@types/teams";
+import { InviteMemberModalProps } from "@/app/types/teams";
 
 
 export function InviteMemberModal({ team, onClose, onInvite }: InviteMemberModalProps) {

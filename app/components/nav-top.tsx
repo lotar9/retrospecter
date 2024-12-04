@@ -22,12 +22,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
+import { Team } from "../types/teams";
+import { Sprint } from "../types/sprints";
 
 interface NavTopProps {
-  selectedTeam: string;
-  onTeamChange: (team: string) => void;
-  selectedSprint: string;
-  onSprintChange: (sprint: string) => void;
+  selectedTeam: Team | undefined;
+  onTeamChange: (team: Team | undefined) => void;
+  selectedSprint: Sprint | undefined;
+  onSprintChange: (sprint: Sprint | undefined) => void;
 }
 
 export function NavTop({ selectedTeam, onTeamChange, selectedSprint, onSprintChange }: NavTopProps) {

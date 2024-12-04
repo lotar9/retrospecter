@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PlusIcon, TrashIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 import { InviteMemberModal } from './components/InviteMemberModal';
 import { CreateTeamModal } from './components/CreateTeamModal';
-import { Team } from '@/app/@types/teams';
+import { Team } from '@/app/types/teams';
+import { fetchTeams, saveTeam, deleteTeam, inviteMember, removeMember } from '@/app/lib/data';
 
 
 export default function Teams() {
@@ -12,6 +13,52 @@ export default function Teams() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+
+  useEffect(() => {
+    fetchTeams().then(setTeams);
+  }, []);
+
+  const handleCreateTeam = async (team: Team) => {
+    try {
+      await saveTeam(team);
+      const updatedTeams = await fetchTeams();
+      setTeams(updatedTeams);
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error('Failed to create team:', error);
+      // Handle error appropriately
+    }
+  };
+
+  const handleDeleteTeam = async (teamId: string) => {
+    try {
+      await deleteTeam(teamId);
+      const updatedTeams = await fetchTeams();
+      setTeams(updatedTeams);
+    } catch (error) {
+      console.error('Failed to delete team:', error);
+    }
+  };
+
+  const handleInviteMember = async (teamId: string, email: string) => {
+    try {
+      await inviteMember(teamId, email);
+      const updatedTeams = await fetchTeams();
+      setTeams(updatedTeams);
+    } catch (error) {
+      console.error('Failed to invite member:', error);
+    }
+  };
+
+  const handleRemoveMember = async (teamId: string, userId: string) => {
+    try {
+      await removeMember(teamId, userId);
+      const updatedTeams = await fetchTeams();
+      setTeams(updatedTeams);
+    } catch (error) {
+      console.error('Failed to remove member:', error);
+    }
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -88,8 +135,7 @@ export default function Teams() {
         <CreateTeamModal
           onClose={() => setShowCreateModal(false)}
           onCreate={(newTeam) => {
-            setTeams([...teams, newTeam]);
-            setShowCreateModal(false);
+            handleCreateTeam(newTeam);
           }}
         />
       )}
@@ -105,6 +151,7 @@ export default function Teams() {
           onInvite={(email) => {
             // Handle invitation logic
             setShowInviteModal(false);
+            handleInviteMember(selectedTeam.id, email);
             setSelectedTeam(null);
           }}
         />

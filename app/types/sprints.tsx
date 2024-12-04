@@ -1,11 +1,9 @@
 export interface Sprint {
-    id: string;
-    externalId: number;
+    sprintId: string;
     name: string;
     startDate: string;
     endDate: string;
     completedDate: string;
-    status: string;
+    state: string;
     goal: string;
-    teamId: number;
 }

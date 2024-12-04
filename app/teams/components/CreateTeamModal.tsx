@@ -1,4 +1,4 @@
-import { CreateTeamModalProps } from "@/app/@types/teams";
+import { CreateTeamModalProps } from "@/app/types/teams";
 
 
 export function CreateTeamModal({ onClose, onCreate }: CreateTeamModalProps) {
@@ -12,9 +12,9 @@ export function CreateTeamModal({ onClose, onCreate }: CreateTeamModalProps) {
           const form = e.target as HTMLFormElement;
           onCreate({
             id: Math.random().toString(36).substr(2, 9),
-            name: form.name,
+            name: form.teamName.value,
             description: form.description.value,
-            jiraBoardId: form.boardId.value,
+            externalBoardId: form.boardId.value,
             members: []
           });
         }}>
@@ -25,7 +25,7 @@ export function CreateTeamModal({ onClose, onCreate }: CreateTeamModalProps) {
             <input
               type="text"
               id="name"
-              name="name"
+              name="teamName"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="Enter team name"
               required

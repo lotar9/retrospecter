@@ -11,6 +11,12 @@ export const authConfig = {
     callbacks: {
       authorized({ auth}) {
         return !!auth
+      },
+      async session({ session, token, user }) {
+        if (token.sub) {
+          session.user.id = token.sub as string;
+        }
+        return session;
       }
     },
     providers: [

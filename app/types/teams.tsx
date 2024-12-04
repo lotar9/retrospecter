@@ -1,8 +1,10 @@
 export interface Team {
-    id: string;
+    teamId: string;
     name: string;
     description: string;
     externalBoardId: number;
+    createdAt: string;
+    createdBy: string;
     members: TeamMember[];
 }
   
