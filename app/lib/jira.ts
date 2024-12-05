@@ -26,7 +26,6 @@ export const getJiraSprints = async (team: Team) => {
         requestContent: 'application/json',
         requestInterceptor
     });
-    console.log(response.body);
     return response.body;
 }
 

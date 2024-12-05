@@ -6,4 +6,5 @@ export interface Sprint {
     completedDate: string;
     state: string;
     goal: string;
+    type: string;
 }

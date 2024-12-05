@@ -21,23 +21,32 @@ export default function SecondaryNavTop({
   const [teams, setTeams] = useState<Team[]>([]);
   const [sprints, setSprints] = useState<Sprint[]>([]);
   useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
+
     const loadTeams = async () => {
       const teamsData = await fetchTeams();
-      setTeams(teamsData);
-      if (teamsData.length > 0 && !selectedTeam) {
-        onTeamChange(teamsData[0]);
+      if (isMounted) {
+        setTeams(teamsData);
+        // Only update selected team if we don't have one and there are teams available
+        if (teamsData.length > 0 && !selectedTeam) {
+          onTeamChange(teamsData[0]);
+        }
       }
     };
+
     loadTeams();
-  }, []);
+
+    return () => {
+      isMounted = false; // Cleanup function to set isMounted to false
+    };
+  }, [selectedTeam, onTeamChange]);
   useEffect(() => {
     const loadSprints = async () => {
       if (selectedTeam) {
         try {
-          const team = teams.find(t => t.id === selectedTeam?.id);
-          if (team) {
-            await fetchSprints(team.id);
-          }
+          const sprintsData = await fetchSprints(selectedTeam.teamId);
+          setSprints(sprintsData);
+          console.log(sprintsData,"sprintsData");
         } catch (error) {
           console.error('Error fetching sprints:', error);
         }
@@ -52,31 +61,29 @@ export default function SecondaryNavTop({
   // Don't render anything if we're on the teams route
   if (pathname === '/teams') return null;
 
-
-
   return (
     <div className="w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-12 flex items-center justify-end space-x-4">
           {/* Team Select */}
           <select
-            value={selectedTeam?.id }
-            onChange={(e) => onTeamChange(teams.find(team => team.id === e.target.value))}
+            value={selectedTeam?.teamId }
+            onChange={(e) => onTeamChange(teams.find(team => team.teamId === e.target.value))}
             className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
           >
             {teams.map(team => (
-              <option key={team.id} value={team.id}>{team.name}</option>
+              <option key={team.teamId} value={team.teamId}>{team.name}</option>
             ))}
           </select>
 
           {/* Sprint Select */}
           <select
-            value={selectedSprint?.id}
-            onChange={(e) => onSprintChange(sprints.find(sprint => sprint.id === e.target.value))}
+            value={selectedSprint?.sprintId}
+            onChange={(e) => onSprintChange(sprints.find(sprint => sprint.sprintId === e.target.value))}
             className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
           >
             {sprints.map(sprint => (
-              <option key={sprint.id} value={sprint.id}>{sprint.name}</option>
+              <option key={sprint.sprintId} value={sprint.sprintId}>{sprint.name}</option>
             ))}
           </select>
 
