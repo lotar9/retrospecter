@@ -32,9 +32,6 @@ export async function GET(
         jiraSprints.values.forEach( (sprint: any) => {
             if (new Date(sprint.endDate) >= startDate) {
               const sprintWithoutKeys = {
-                  PK: `TEAM#${params.teamId}`,
-                  SK: `SPRINT#${sprint.id}`,
-                  type: "sprint",
                   sprintId: sprint.id,
                   name: sprint.name,
                   startDate: sprint.startDate,
@@ -47,6 +44,8 @@ export async function GET(
               const sprintRecord = {
                 PK: `TEAM#${params.teamId}`,
                 SK: `SPRINT#${sprint.id}`,
+                GSI1PK: `TEAM#${params.teamId}`,
+                entityType: 'sprint',
                 ...sprintWithoutKeys
               } ;
               client.put({

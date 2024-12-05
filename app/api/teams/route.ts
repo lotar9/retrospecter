@@ -46,21 +46,16 @@ export async function GET() {
         }
       });
 
-      const teamData = teamResult.Items?.[0];
-      const members = memberResults.Items?.map(member => ({
+      const teamData = teamResult.Items?.[0] as Team;
+      teamData.members = memberResults.Items?.map(member => ({
         id: member.userId,
         name: member.name || '',
         email: member.email || '',
         role: member.role
       })) || [];
+      const {PK, SK, entityType, ...teamDataPlain} = teamData;
 
-      return {
-        id: teamId,
-        name: teamData?.name || '',
-        description: teamData?.description || '',
-        externalBoardId: teamData?.externalBoardId || '',
-        members
-      };
+      return teamDataPlain;
     }) || [];
 
     const teams = await Promise.all(teamPromises);

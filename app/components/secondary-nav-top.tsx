@@ -21,40 +21,29 @@ export default function SecondaryNavTop({
   const [teams, setTeams] = useState<Team[]>([]);
   const [sprints, setSprints] = useState<Sprint[]>([]);
   useEffect(() => {
-    let isMounted = true; // Track if the component is mounted
-
     const loadTeams = async () => {
       const teamsData = await fetchTeams();
-      if (isMounted) {
-        setTeams(teamsData);
-        // Only update selected team if we don't have one and there are teams available
-        if (teamsData.length > 0 && !selectedTeam) {
-          onTeamChange(teamsData[0]);
-        }
+      setTeams(teamsData);
+      // Only update selected team if we don't have one and there are teams available
+      if (teamsData.length > 0 && !selectedTeam) {
+        onTeamChange(teamsData[0]);
       }
     };
-
     loadTeams();
-
-    return () => {
-      isMounted = false; // Cleanup function to set isMounted to false
-    };
-  }, [selectedTeam, onTeamChange]);
-  useEffect(() => {
-    const loadSprints = async () => {
-      if (selectedTeam) {
-        try {
-          const sprintsData = await fetchSprints(selectedTeam.teamId);
-          setSprints(sprintsData);
-          console.log(sprintsData,"sprintsData");
-        } catch (error) {
-          console.error('Error fetching sprints:', error);
-        }
+  }, []);
+  useEffect(() =>{
+    const loadSprints = async (teamId:string) => {
+      const sprintData = await fetchSprints(teamId);
+      setSprints(sprintData);
+      if (sprintData.length > 0 && !selectedSprint){
+        onSprintChange(sprintData[0]);
       }
-    };
+    }
+    if (selectedTeam){
+      loadSprints(selectedTeam.teamId)  
+    }
+  },[selectedTeam])
 
-    loadSprints();
-  }, [selectedTeam]);
 
   const pathname = usePathname();
 
