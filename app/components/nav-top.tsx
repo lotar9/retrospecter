@@ -14,7 +14,6 @@ import {
   Cog6ToothIcon,
   ArrowRightEndOnRectangleIcon
 } from "@heroicons/react/24/outline";
-import SecondaryNavTop from "@/app/components/secondary-nav-top";
 import { Avatar, AvatarImage, AvatarFallback } from "@/app/components/ui/avatar";
 import {
   DropdownMenu,
@@ -22,17 +21,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import { Team } from "../types/teams";
-import { Sprint } from "../types/sprints";
 
-interface NavTopProps {
-  selectedTeam: Team | undefined;
-  onTeamChange: (team: Team | undefined) => void;
-  selectedSprint: Sprint | undefined;
-  onSprintChange: (sprint: Sprint | undefined) => void;
-}
-
-export function NavTop({ selectedTeam, onTeamChange, selectedSprint, onSprintChange }: NavTopProps) {
+export function NavTop() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { data: session } = useSession();
@@ -119,16 +109,6 @@ export function NavTop({ selectedTeam, onTeamChange, selectedSprint, onSprintCha
 
       {/* Divider */}
       <div className="h-px bg-gray-200 dark:bg-gray-700" />
-
-      {/* Bottom Row */}
-      <div className="flex items-center justify-between px-4 bg-gray-50 dark:bg-gray-800">
-        <SecondaryNavTop 
-          selectedTeam={selectedTeam} 
-          onTeamChange={onTeamChange} 
-          selectedSprint={selectedSprint} 
-          onSprintChange={onSprintChange} 
-        />
-      </div>
     </div>
   );
 }

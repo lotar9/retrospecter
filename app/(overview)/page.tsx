@@ -5,6 +5,9 @@ import { RetroTemplateBoardColumn } from "@/app/components/retro-template-board-
 import { HandThumbUpIcon, XCircleIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Card } from "@/app/components/card";
 import { SurveyPlaceholder } from "@/app/components/survey-placeholder";
+import SecondaryNavTop from '../components/secondary-nav-top';
+import { Team } from '../types/teams';
+import { Sprint } from '../types/sprints';
 
 interface CardType {
   id: string
@@ -40,9 +43,10 @@ interface Survey {
   totalVotes: number
 }
 
-
 export default function Home() {
 
+  const [selectedTeam, setSelectedTeam] = useState<Team>();
+  const [selectedSprint, setSelectedSprint] = useState<Sprint>(); 
 
   const [columns, setColumns] = useState<Record<string, ColumnType>>({
     'went-well': {
@@ -197,6 +201,16 @@ export default function Home() {
 
   return (
     <>
+      <div className="flex items-center justify-between px-4">
+        <SecondaryNavTop 
+          selectedTeam={selectedTeam} 
+          onTeamChange={setSelectedTeam} 
+          selectedSprint={selectedSprint} 
+          onSprintChange={setSelectedSprint} 
+        />
+      </div>
+      <div className="flex flex-1 gap-4 p-4">
+
         <div className="flex gap-4 flex-[3]">
           {Object.values(columns).map(column => (
             <RetroTemplateBoardColumn
@@ -231,6 +245,7 @@ export default function Home() {
             onSurveyActions={handleSurveyActions}
           />
         </div>
+      </div>
     </>
   )
 }
