@@ -1,0 +1,40 @@
+Teams:
+PK: TEAM#<teamId>
+SK: METADATA#<teamId>
+
+Columns:
+PK: COLUMN#<columnId>
+SK: METADATA#<columnId>
+
+Sprints:
+PK: TEAM#<teamId>
+SK: SPRINT#<sprintId>
+
+Cards:
+PK: TEAM#<teamId>
+SK: SPRINT#<sprintId>#COLUMN#<columnId>#CARD#<cardId>
+
+Users (separate table):
+PK: USER#<userId>
+SK: METADATA#<userId>
+
+Cards (main table):
+PK: TEAM#<teamId>
+SK: SPRINT#<sprintId>#COLUMN#<columnId>#CARD#<cardId>
+// Additional attributes:
+createdBy: <userId>
+createdAt: <timestamp>
+
+Votes (main table):
+PK: TEAM#<teamId>
+SK: SPRINT#<sprintId>#COLUMN#<columnId>#CARD#<cardId>#VOTE#<userId>
+// Additional attributes:
+votedBy: <userId>
+votedAt: <timestamp>
+
+Comments (main table):
+PK: TEAM#<teamId>
+SK: SPRINT#<sprintId>#COLUMN#<columnId>#CARD#<cardId>#COMMENT#<timestamp>#<commentId>
+// Additional attributes:
+commentedBy: <userId>
+content: <string>

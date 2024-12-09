@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 import { RetroTemplateBoardColumn } from "@/app/components/retro-template-board-column";
 import { HandThumbUpIcon, XCircleIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Card } from "@/app/components/card";
@@ -8,27 +8,8 @@ import { SurveyPlaceholder } from "@/app/components/survey-placeholder";
 import SecondaryNavTop from '../components/secondary-nav-top';
 import { Team } from '../types/teams';
 import { Sprint } from '../types/sprints';
-
-interface CardType {
-  id: string
-  content: string
-  reporter: {
-    name: string
-    avatar: string
-    
-  }
-  commentCount: number
-  voteCount: number
-}
-
-interface ColumnType {
-  id: string
-  title: string
-  subtitle: string
-  icon: ReactNode
-  color: string
-  cards: CardType[]
-}
+import { addCard, fetchCards } from '../lib/data';
+import { Column } from '../types/cards';
 
 interface SurveyOption {
   id: string
@@ -47,7 +28,28 @@ export default function Home() {
 
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [selectedSprint, setSelectedSprint] = useState<Sprint>(); 
+  const [columns, setColumns] = useState<Record<string, Column>>({});
 
+  useEffect( () =>{
+    const loadCards = async () =>{
+      if (selectedTeam && selectedSprint){
+        const columns:Record<string,Column> = await fetchCards(selectedTeam.teamId, selectedSprint.sprintId);
+        const iconMapping: Record<string, ReactNode> = {
+          'HandThumbUpIcon': <HandThumbUpIcon className="h-5 w-5" />,
+          'XCircleIcon': <XCircleIcon className="h-5 w-5" />,
+          'ArrowPathIcon': <ArrowPathIcon className="h-5 w-5" />,
+        };
+        Object.values(columns).forEach(column => {
+          column.heroIcon = iconMapping[column.icon] || column.icon;
+        });
+        setColumns(columns)
+      }
+    }
+    loadCards();
+
+  },[selectedTeam,selectedSprint]);
+
+  /*
   const [columns, setColumns] = useState<Record<string, ColumnType>>({
     'went-well': {
       id: 'went-well',
@@ -138,6 +140,7 @@ export default function Home() {
     }
     // ... define other columns similarly
   })
+  */
 
   const surveys: Survey[] = [
     {
@@ -167,6 +170,19 @@ export default function Home() {
     onEdit: (surveyTitle: string) => console.log('Edit survey:', surveyTitle),
     onReset: (surveyTitle: string) => console.log('Reset survey:', surveyTitle),
     onDelete: (surveyTitle: string) => console.log('Delete survey:', surveyTitle),
+  }
+
+  const handleAddCard = async (column: Column, content: string) => {
+    if (selectedTeam && selectedSprint) {
+      const card = await addCard(selectedTeam.teamId, selectedSprint.sprintId, column.columnId, content);
+      setColumns(prev => {
+        const newColumns = { ...prev };
+        if (card) {
+          newColumns[column.columnId].cards = [...newColumns[column.columnId].cards, card];
+        }
+        return newColumns;
+      });
+    }
   }
 
   const handleDrop = (cardId: string, sourceColumn: string, targetColumn: string) => {
@@ -214,26 +230,22 @@ export default function Home() {
         <div className="flex gap-4 flex-[3]">
           {Object.values(columns).map(column => (
             <RetroTemplateBoardColumn
-              key={column.id}
-              columnId={column.id}
-              title={column.title}
-              subtitle={column.subtitle}
-              icon={column.icon}
-              color={column.color}
+              key={column.columnId}
+              column={column}
               onDrop={handleDrop}
+              onAdd={handleAddCard}
             >
               {column.cards.map(card => (
                 <Card 
-                  key={card.id}
-                  id={card.id}
-                  columnId={column.id}
+                  key={card.cardId}
+                  id={card.cardId}
+                  columnId={column.columnId}
                   color={column.color}
-                  reporter={card.reporter}
-                  commentCount={card.commentCount}
-                  voteCount={card.voteCount}
-                  onVote={(direction) => handleVote(card.id, column.id, direction)}
-                >
-                  {card.content}
+                  reporter={card.user ? { name: card.user.name, avatar: card.user.image } : { name: '', avatar: '' }}
+                  commentCount={card.comments.length}
+                  voteCount={card.votes.length}
+                  onVote={(direction) => handleVote(card.cardId, column.columnId, direction)}>
+                  {card.description}
                 </Card>
               ))}
             </RetroTemplateBoardColumn>

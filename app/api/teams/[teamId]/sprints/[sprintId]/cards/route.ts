@@ -4,32 +4,33 @@ import client from "@/app/lib/db";
 
 export async function GET(
   request: Request,
-  { params }: { params: { teamId: string; sprintId: string } }
+  context: { params: Promise<{ teamId: string, sprintId: string }> }
 ) {
   const session = await auth();
   if (!session) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
-
+  const params = await context.params;
   try {
-    const result = await client.query({
-      TableName: "RetroApp",
-      KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+    const cards = await client.query({
+      TableName: "AgileTeams",
+      KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
       ExpressionAttributeValues: {
-        ":pk": `SPRINT#${params.sprintId}`,
-        ":sk": "CARD#"
+        ":pk": `TEAM#${params.teamId}`,
+        ":sk": `SPRINT#${params.sprintId}#COLUMN#`
       }
     });
 
-    return NextResponse.json(result.Items);
+    return NextResponse.json(cards.Items);
   } catch (error) {
+    console.error(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
 export async function POST(
   request: Request,
-  { params }: { params: { teamId: string; sprintId: string } }
+  context: { params: Promise<{ teamId: string; sprintId: string }> }
 ) {
   const session = await auth();
   if (!session || !session.user) {
@@ -37,28 +38,27 @@ export async function POST(
   }
 
   try {
+    const params = await context.params
     const body = await request.json();
     const cardId = crypto.randomUUID();
     const timestamp = new Date().toISOString();
+    const card = {
+      PK: `TEAM#${params.teamId}`,
+      SK: `SPRINT#${params.sprintId}#COLUMN#${body.columnId}CARD#${cardId}`,
+      GSI1PK: `SPRINT#${params.sprintId}`,
+      GSI1SK: `COLUMN#${body.columnId}`,
+      entitytype: "card",
+      description: body.content,
+      createdAt: timestamp,
+      createdBy: session.user.id,
+    }
 
     await client.put({
-      TableName: "RetroApp",
-      Item: {
-        PK: `SPRINT#${params.sprintId}`,
-        SK: `CARD#${cardId}`,
-        GSI1PK: `TEAM#${params.teamId}`,
-        GSI1SK: `CATEGORY#${body.category}`,
-        type: "CARD",
-        content: body.content,
-        category: body.category,
-        createdAt: timestamp,
-        createdBy: session.user.id,
-        votes: 0,
-        comments: 0
-      }
+      TableName: "AgileTeams",
+      Item: card
     });
 
-    return NextResponse.json({ cardId });
+    return NextResponse.json(card);
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
